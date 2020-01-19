@@ -9,7 +9,11 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: HomeScreen(),
+      darkTheme: ThemeData.dark(),
+      home:Scaffold(
+        appBar: AppBar(title: Text('Management')),
+        body: HomeScreen(),
+      ),
     );
   }
 }
