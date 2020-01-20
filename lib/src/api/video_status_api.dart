@@ -1,25 +1,25 @@
 
-import 'package:aram_management/src/model/video.dart';
+import 'package:aram_management/src/model/video_status.dart';
 import 'package:http/http.dart' show Client;
 
-class VideoApi {
+class VideoStatusApi {
   final String baseUrl = "http://46.101.250.202/ahmed/aramapi/public";
   Client client = Client();
 
-  Future<List<Video>> getVideos() async {
-    final response = await client.get("$baseUrl/videos/get");
+  Future<List<VideoStatus>> getVideoStatuss() async {
+    final response = await client.get("$baseUrl/videostatuses/get");
     if (response.statusCode == 200) {
-      return videoFromJson(response.body);
+      return videoStatusFromJson(response.body);
     } else {
       return null;
     }
   }
 
-  Future<bool> createVideo(Video data) async {
+  Future<bool> createVideoStatus(VideoStatus data) async {
     final response = await client.post(
-      "$baseUrl/video/post",
+      "$baseUrl/videostatus/post",
       headers: {"content-type": "application/json"},
-      body: videoToJson(data),
+      body: videoStatusToJson(data),
     );
     if (response.statusCode == 201) {
       return true;
@@ -28,11 +28,11 @@ class VideoApi {
     }
   }
 
-  Future<bool> updateVideo(Video data) async {
+  Future<bool> updateVideoStatus(VideoStatus data) async {
     final response = await client.put(
-      "$baseUrl/video/put/${data.videoId}",
+      "$baseUrl/videostatus/put/${data.videoStatusId}",
       headers: {"content-type": "application/json"},
-      body: videoToJson(data),
+      body: videoStatusToJson(data),
     );
     if (response.statusCode == 200) {
       return true;
@@ -41,9 +41,9 @@ class VideoApi {
     }
   }
 
-  Future<bool> deleteVideo(String id) async {
+  Future<bool> deleteVideoStatus(int id) async {
     final response = await client.delete(
-      "$baseUrl/video/delete/$id",
+      "$baseUrl/videostatus/delete/$id",
       headers: {"content-type": "application/json"},
     );
     if (response.statusCode == 200) {
