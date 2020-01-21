@@ -62,96 +62,99 @@ class _VideoAddScreenState extends State<VideoAddScreen> {
           style: TextStyle(color: Colors.white),
         ),
       ),
-      body: Stack(
-        children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: <Widget>[
-                _buildTextFieldvideoTitle(),
-                _buildVideoStatus(),
-                _buildDomain(),
-                Padding(
-                  padding: const EdgeInsets.only(top: 8.0),
-                  child: RaisedButton(
-                    child: Text(
-                      widget.video == null
-                          ? "حفظ".toUpperCase()
-                          : "تعديل".toUpperCase(),
-                      style: TextStyle(
-                        color: Colors.white,
+      body: SingleChildScrollView(
+              child: Stack(
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: <Widget>[
+                  _buildTextFieldvideoTitle(),
+                  _buildVideoStatus(),
+                  _buildDomain(),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 8.0),
+                    child: RaisedButton(
+                      child: Text(
+                        widget.video == null
+                            ? "حفظ".toUpperCase()
+                            : "تعديل".toUpperCase(),
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
                       ),
-                    ),
-                    onPressed: () {
-                      if (_isFieldvideoTitleValid == null ||
-                          _isFieldEmailValid == null ||
-                          _isFieldAgeValid == null ||
-                          !_isFieldvideoTitleValid ||
-                          !_isFieldEmailValid ||
-                          !_isFieldAgeValid) {
-                        _scaffoldState.currentState.showSnackBar(
-                          SnackBar(
-                            content: Text("Please fill all field"),
-                          ),
+                      onPressed: () {
+                        if (_isFieldvideoTitleValid == null ||
+                            _isFieldEmailValid == null ||
+                            _isFieldAgeValid == null ||
+                            !_isFieldvideoTitleValid ||
+                            !_isFieldEmailValid ||
+                            !_isFieldAgeValid) {
+                          _scaffoldState.currentState.showSnackBar(
+                            SnackBar(
+                              content: Text("Please fill all field"),
+                            ),
+                          );
+                          return;
+                        }
+                        setState(() => _isLoading = true);
+                        String name = _controllervideoTitle.text.toString();
+                        // String email = _controllerEmail.text.toString();
+                        // int age = int.parse(_controllerAge.text.toString());
+                        Video video = Video(
+                          videoTitle: name, /* email: email, age: age*/
                         );
-                        return;
-                      }
-                      setState(() => _isLoading = true);
-                      String name = _controllervideoTitle.text.toString();
-                      // String email = _controllerEmail.text.toString();
-                      // int age = int.parse(_controllerAge.text.toString());
-                      Video video = Video(
-                        videoTitle: name, /* email: email, age: age*/
-                      );
-                      if (widget.video == null) {
-                        _videoApi.createVideo(video).then((isSuccess) {
-                          setState(() => _isLoading = false);
-                          if (isSuccess) {
-                            Navigator.pop(_scaffoldState.currentState.context);
-                          } else {
-                            _scaffoldState.currentState.showSnackBar(SnackBar(
-                              content: Text("Submit data failed"),
-                            ));
-                          }
-                        });
-                      } else {
-                        video.videoId = widget.video.videoId;
-                        _videoApi.updateVideo(video).then((isSuccess) {
-                          setState(() => _isLoading = false);
-                          if (isSuccess) {
-                            Navigator.pop(_scaffoldState.currentState.context);
-                          } else {
-                            _scaffoldState.currentState.showSnackBar(SnackBar(
-                              content: Text("Update data failed"),
-                            ));
-                          }
-                        });
-                      }
-                    },
-                    color: Colors.orange[600],
-                  ),
-                )
-              ],
+                        if (widget.video == null) {
+                          _videoApi.createVideo(video).then((isSuccess) {
+                            setState(() => _isLoading = false);
+                            if (isSuccess) {
+                              Navigator.pop(_scaffoldState.currentState.context);
+                            } else {
+                              _scaffoldState.currentState.showSnackBar(SnackBar(
+                                content: Text("Submit data failed"),
+                              ));
+                            }
+                          });
+                        } else {
+                          video.videoId = widget.video.videoId;
+                          _videoApi.updateVideo(video).then((isSuccess) {
+                            setState(() => _isLoading = false);
+                            if (isSuccess) {
+                              Navigator.pop(_scaffoldState.currentState.context);
+                            } else {
+                              _scaffoldState.currentState.showSnackBar(SnackBar(
+                                content: Text("Update data failed"),
+                              ));
+                            }
+                          });
+                        }
+                      },
+                      color: Colors.orange[600],
+                    ),
+                  )
+                ],
+              ),
             ),
-          ),
-          _isLoading
-              ? Stack(
-                  children: <Widget>[
-                    Opacity(
-                      opacity: 0.3,
-                      child: ModalBarrier(
-                        dismissible: false,
-                        color: Colors.grey,
+            _isLoading
+                ? Stack(
+                    children: <Widget>[
+                      Opacity(
+                        opacity: 0.3,
+                        child: ModalBarrier(
+                          dismissible: false,
+                          color: Colors.grey,
+                        ),
                       ),
-                    ),
-                    Center(
-                      child: CircularProgressIndicator(),
-                    ),
-                  ],
-                )
-              : Container(),
-        ],
+                      Center(
+                        child: CircularProgressIndicator(),
+                      ),
+                    ],
+                  )
+                : Container(),
+          ],
+        ),
       ),
     );
   }
