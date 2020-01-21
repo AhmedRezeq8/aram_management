@@ -1,8 +1,12 @@
+import 'package:aram_management/src/api/domain_api.dart';
 import 'package:aram_management/src/api/video_api.dart';
 import 'package:aram_management/src/api/video_status_api.dart';
+import 'package:aram_management/src/model/domain.dart';
 import 'package:aram_management/src/model/video.dart';
 import 'package:aram_management/src/model/video_status.dart';
+import 'package:aram_management/src/provaiders/public_provaider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 final GlobalKey<ScaffoldState> _scaffoldState = GlobalKey<ScaffoldState>();
 
@@ -20,6 +24,7 @@ class _VideoAddScreenState extends State<VideoAddScreen> {
   bool _isLoading = false;
   VideoApi _videoApi = VideoApi();
   VideoStatusApi _videoStatusApi;
+  DomainApi _domainApi;
   bool _isFieldvideoTitleValid;
   bool _isFieldEmailValid;
   bool _isFieldAgeValid;
@@ -39,11 +44,15 @@ class _VideoAddScreenState extends State<VideoAddScreen> {
       // _controllerAge.text = widget.video.age.toString();
     }
     _videoStatusApi = VideoStatusApi();
+    _domainApi = DomainApi();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    // final statusSelected =
+    //     Provider.of<SelectedStatusProvider>(context, listen: false);
+
     return Scaffold(
       key: _scaffoldState,
       appBar: AppBar(
@@ -61,8 +70,8 @@ class _VideoAddScreenState extends State<VideoAddScreen> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
                 _buildTextFieldvideoTitle(),
-                _buildTextFieldEmail(),
-                _buildTextFieldAge(),
+                _buildVideoStatus(),
+                _buildDomain(),
                 Padding(
                   padding: const EdgeInsets.only(top: 8.0),
                   child: RaisedButton(
@@ -90,8 +99,8 @@ class _VideoAddScreenState extends State<VideoAddScreen> {
                       }
                       setState(() => _isLoading = true);
                       String name = _controllervideoTitle.text.toString();
-                      String email = _controllerEmail.text.toString();
-                      int age = int.parse(_controllerAge.text.toString());
+                      // String email = _controllerEmail.text.toString();
+                      // int age = int.parse(_controllerAge.text.toString());
                       Video video = Video(
                         videoTitle: name, /* email: email, age: age*/
                       );
@@ -166,7 +175,7 @@ class _VideoAddScreenState extends State<VideoAddScreen> {
     );
   }
 
-  Widget _buildTextFieldEmail() {
+  Widget _buildVideoStatus() {
     return FutureBuilder(
       future: _videoStatusApi.getVideoStatuss(),
       builder:
@@ -178,7 +187,7 @@ class _VideoAddScreenState extends State<VideoAddScreen> {
           );
         } else if (snapshot.connectionState == ConnectionState.done) {
           List<VideoStatus> videoStatuses = snapshot.data;
-          return _buildListView(videoStatuses);
+          return _buildListViewVideoStatus(videoStatuses);
         } else {
           return Center(
             child: CircularProgressIndicator(),
@@ -186,44 +195,30 @@ class _VideoAddScreenState extends State<VideoAddScreen> {
         }
       },
     );
-    // return TextField(
-    //   controller: _controllerEmail,
-    //   keyboardType: TextInputType.emailAddress,
-    //   decoration: InputDecoration(
-    //     labelText: "Email",
-    //     errorText: _isFieldEmailValid == null || _isFieldEmailValid
-    //         ? null
-    //         : "Email is required",
-    //   ),
-    //   onChanged: (value) {
-    //     bool isFieldValid = value.trim().isNotEmpty;
-    //     if (isFieldValid != _isFieldEmailValid) {
-    //       setState(() => _isFieldEmailValid = isFieldValid);
-    //     }
-    //   },
-    // );
   }
 
-  Widget _buildTextFieldAge() {
-    return TextField(
-      controller: _controllerAge,
-      keyboardType: TextInputType.number,
-      decoration: InputDecoration(
-        labelText: "Age",
-        errorText: _isFieldAgeValid == null || _isFieldAgeValid
-            ? null
-            : "Age is required",
-      ),
-      onChanged: (value) {
-        bool isFieldValid = value.trim().isNotEmpty;
-        if (isFieldValid != _isFieldAgeValid) {
-          setState(() => _isFieldAgeValid = isFieldValid);
+  Widget _buildDomain() {
+    return FutureBuilder(
+      future: _domainApi.getDomains(),
+      builder: (BuildContext context, AsyncSnapshot<List<Domains>> snapshot) {
+        if (snapshot.hasError) {
+          return Center(
+            child: Text(
+                "Something wrong with message: ${snapshot.error.toString()}"),
+          );
+        } else if (snapshot.connectionState == ConnectionState.done) {
+          List<Domains> domains = snapshot.data;
+          return _buildListViewDomains(domains);
+        } else {
+          return Center(
+            child: CircularProgressIndicator(),
+          );
         }
       },
     );
   }
 
-  Widget _buildListView(List<VideoStatus> videoStatuses) {
+  Widget _buildListViewVideoStatus(List<VideoStatus> videoStatuses) {
     return Container(
       height: 100,
       child: GridView.builder(
@@ -231,7 +226,7 @@ class _VideoAddScreenState extends State<VideoAddScreen> {
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2,
           crossAxisSpacing: 0,
-          childAspectRatio: 2 / 5,
+          childAspectRatio: 2.5 / 5,
           mainAxisSpacing: 0,
         ),
         scrollDirection: Axis.horizontal,
@@ -239,20 +234,64 @@ class _VideoAddScreenState extends State<VideoAddScreen> {
         itemBuilder: (BuildContext context, int index) {
           VideoStatus _videoStatus = videoStatuses[index];
           print(_videoStatus.videoStatusName);
-          return Container(
+          return Consumer<SelectedStatusProvider>(
+            builder: (ctx, statusSelected, _) => Container(
               margin: EdgeInsets.only(top: 10),
-              child: Radio(
-                groupValue: _videoStatus.videoStatusName,
-                onChanged:(va){
-
-                },
-                value: Chip(
+              child: GestureDetector(
+                child: Chip(
                   label: Text(_videoStatus.videoStatusName),
-                  backgroundColor: isVideoStatusSelected == true
+                  backgroundColor: statusSelected.index ==
+                          int.parse(_videoStatus.videoStatusId)
                       ? Color(int.parse(_videoStatus.videoStatusColor))
                       : Colors.grey[300],
                 ),
-              ));
+                onTap: () {
+                  statusSelected.index = int.parse(_videoStatus.videoStatusId);
+                },
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _buildListViewDomains(List<Domains> domain) {
+    return Container(
+      height: 80,
+      child: ListView.builder(
+        // shrinkWrap: true,
+        scrollDirection: Axis.horizontal,
+
+        itemCount: domain.length,
+        itemBuilder: (BuildContext context, int index) {
+          Domains _domain = domain[index];
+
+          return Consumer<SelectedDomainProvider>(
+            builder: (ctx, domainSelected, _) => Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: <Widget>[
+                GestureDetector(
+                  child: Container(
+                    width: 70,
+                    height: 70,
+                    
+                    child: CircleAvatar(
+                      backgroundImage: NetworkImage(_domain.domainImageUrl),
+                      backgroundColor: Colors.grey,
+                    ),
+                  ),
+                  onTap: () {
+                    print(domainSelected.index);
+                    domainSelected.index=int.parse( _domain.domainId);
+                  },
+                ),
+                SizedBox(
+                  width: 10,
+                )
+              ],
+            ),
+          );
         },
       ),
     );
