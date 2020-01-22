@@ -1,9 +1,11 @@
 import 'package:aram_management/src/api/domain_api.dart';
 import 'package:aram_management/src/api/video_api.dart';
 import 'package:aram_management/src/api/video_status_api.dart';
+import 'package:aram_management/src/api/video_type_api.dart';
 import 'package:aram_management/src/model/domain.dart';
 import 'package:aram_management/src/model/video.dart';
 import 'package:aram_management/src/model/video_status.dart';
+import 'package:aram_management/src/model/video_type.dart';
 import 'package:aram_management/src/provaiders/public_provaider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -24,6 +26,7 @@ class _VideoAddScreenState extends State<VideoAddScreen> {
   bool _isLoading = false;
   VideoApi _videoApi = VideoApi();
   VideoStatusApi _videoStatusApi;
+  VideoTypeApi _videoTypeApi;
   DomainApi _domainApi;
   bool _isFieldvideoTitleValid;
   bool _isFieldEmailValid;
@@ -44,6 +47,7 @@ class _VideoAddScreenState extends State<VideoAddScreen> {
       // _controllerAge.text = widget.video.age.toString();
     }
     _videoStatusApi = VideoStatusApi();
+    _videoTypeApi = VideoTypeApi();
     _domainApi = DomainApi();
     super.initState();
   }
@@ -70,7 +74,7 @@ class _VideoAddScreenState extends State<VideoAddScreen> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
                 _buildTextFieldvideoTitle(),
-                _buildVideoStatus(),
+                _buildVideoType(),
                 _buildDomain(),
                 Padding(
                   padding: const EdgeInsets.only(top: 8.0),
@@ -92,10 +96,10 @@ class _VideoAddScreenState extends State<VideoAddScreen> {
                           !_isFieldAgeValid) {
                         _scaffoldState.currentState.showSnackBar(
                           SnackBar(
-                            content: Text("Please fill all field"),
+                            content: Text(" الرجاء تعبئة جميع الحقول"),
                           ),
                         );
-                        return;
+                        return; 
                       }
                       setState(() => _isLoading = true);
                       String name = _controllervideoTitle.text.toString();
@@ -156,6 +160,7 @@ class _VideoAddScreenState extends State<VideoAddScreen> {
     );
   }
 
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   Widget _buildTextFieldvideoTitle() {
     return TextField(
       controller: _controllervideoTitle,
@@ -175,19 +180,18 @@ class _VideoAddScreenState extends State<VideoAddScreen> {
     );
   }
 
-  Widget _buildVideoStatus() {
+  Widget _buildVideoType() {
     return FutureBuilder(
-      future: _videoStatusApi.getVideoStatuss(),
-      builder:
-          (BuildContext context, AsyncSnapshot<List<VideoStatus>> snapshot) {
+      future: _videoTypeApi.getVideoTypes(),
+      builder: (BuildContext context, AsyncSnapshot<List<VideoType>> snapshot) {
         if (snapshot.hasError) {
           return Center(
             child: Text(
                 "Something wrong with message: ${snapshot.error.toString()}"),
           );
         } else if (snapshot.connectionState == ConnectionState.done) {
-          List<VideoStatus> videoStatuses = snapshot.data;
-          return _buildListViewVideoStatus(videoStatuses);
+          List<VideoType> videoTypes = snapshot.data;
+          return _buildListViewVideoType(videoTypes);
         } else {
           return Center(
             child: CircularProgressIndicator(),
@@ -218,35 +222,30 @@ class _VideoAddScreenState extends State<VideoAddScreen> {
     );
   }
 
-  Widget _buildListViewVideoStatus(List<VideoStatus> videoStatuses) {
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  Widget _buildListViewVideoType(List<VideoType> videoTypes) {
     return Container(
       height: 100,
-      child: GridView.builder(
+      child: ListView.builder(
         shrinkWrap: true,
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,
-          crossAxisSpacing: 0,
-          childAspectRatio: 2.5 / 5,
-          mainAxisSpacing: 0,
-        ),
         scrollDirection: Axis.horizontal,
-        itemCount: videoStatuses.length,
+        itemCount: videoTypes.length,
         itemBuilder: (BuildContext context, int index) {
-          VideoStatus _videoStatus = videoStatuses[index];
-          print(_videoStatus.videoStatusName);
-          return Consumer<SelectedStatusProvider>(
+          VideoType _videoType = videoTypes[index];
+          // print(_videoType.videoStatusName);
+          return Consumer<SelectedTypeProvider>(
             builder: (ctx, statusSelected, _) => Container(
-              margin: EdgeInsets.only(top: 10),
+              margin: EdgeInsets.only(top: 10, left: 8),
               child: GestureDetector(
                 child: Chip(
-                  label: Text(_videoStatus.videoStatusName),
-                  backgroundColor: statusSelected.index ==
-                          int.parse(_videoStatus.videoStatusId)
-                      ? Color(int.parse(_videoStatus.videoStatusColor))
-                      : Colors.grey[300],
+                  label: Text(_videoType.videoTypeName),
+                  backgroundColor:
+                      statusSelected.index == int.parse(_videoType.videoTypeId)
+                          ? Colors.lime
+                          : Colors.grey[300],
                 ),
                 onTap: () {
-                  statusSelected.index = int.parse(_videoStatus.videoStatusId);
+                  statusSelected.index = int.parse(_videoType.videoTypeId);
                 },
               ),
             ),
@@ -272,18 +271,25 @@ class _VideoAddScreenState extends State<VideoAddScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[
                 GestureDetector(
-                  child: Container(
-                    width: 70,
-                    height: 70,
-                    
-                    child: CircleAvatar(
-                      backgroundImage: NetworkImage(_domain.domainImageUrl),
-                      backgroundColor: Colors.grey,
+                  child: Stack(children: <Widget>[
+                    AnimatedOpacity(
+                      duration: Duration(milliseconds: 200),
+                      opacity:domainSelected.index == int.parse(_domain.domainId)? 1:.2,
+                      child: CircleAvatar(
+                        radius: 30,
+                        backgroundImage: NetworkImage(_domain.domainImageUrl),
+                      ),
                     ),
-                  ),
+                    // CircleAvatar(
+                    // //  radius: 50,
+                    //   backgroundColor: domainSelected.index == int.parse(_domain.domainId)
+                    //       ? Colors.grey.withOpacity(.00)
+                    //       : Colors.grey.withOpacity(.60),
+                    // ),
+                  ]),
                   onTap: () {
                     print(domainSelected.index);
-                    domainSelected.index=int.parse( _domain.domainId);
+                    domainSelected.index = int.parse(_domain.domainId);
                   },
                 ),
                 SizedBox(

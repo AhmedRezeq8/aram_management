@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
-class SelectedStatusProvider with ChangeNotifier {
+class SelectedTypeProvider with ChangeNotifier {
 
-  int _selectedStatusId= 0;
-  int get index => _selectedStatusId;
+  int _selectedTypeId= 0;
+  int get index => _selectedTypeId;
 
   set index(int val){
-    _selectedStatusId= val;
+    _selectedTypeId= val;
     notifyListeners();
   }
 
