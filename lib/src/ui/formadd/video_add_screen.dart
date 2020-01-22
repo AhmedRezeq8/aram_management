@@ -115,7 +115,7 @@ class _VideoAddScreenState extends State<VideoAddScreen> {
                             Navigator.pop(_scaffoldState.currentState.context);
                           } else {
                             _scaffoldState.currentState.showSnackBar(SnackBar(
-                              content: Text("Submit data failed"),
+                              content: Text("فشل حفظ البيانات"),
                             ));
                           }
                         });
@@ -127,7 +127,7 @@ class _VideoAddScreenState extends State<VideoAddScreen> {
                             Navigator.pop(_scaffoldState.currentState.context);
                           } else {
                             _scaffoldState.currentState.showSnackBar(SnackBar(
-                              content: Text("Update data failed"),
+                              content: Text("فشل تعديل البيانات"),
                             ));
                           }
                         });
