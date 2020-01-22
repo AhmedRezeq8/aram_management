@@ -1,15 +1,13 @@
 import 'dart:convert';
 
-
-      List<Video> videoFromJson(String str) {
-    final data = json.decode(str);
+List<Video> videoFromJson(String str) {
+  final data = json.decode(str);
   return List<Video>.from(data.map((item) => Video.fromJson(item)));
-  }
+}
 
 String videoToJson(Video data) => json.encode(data.toJson());
 
 class Video {
-  
   String videoStatusColor;
   String domainImageUrl;
   String videoProducedBy;
@@ -22,6 +20,7 @@ class Video {
   String domainId;
   String videoStatusId;
   String videoTypeId;
+  String videoUserId;
   String userName;
   String domainName;
   String videoStatusName;
@@ -38,6 +37,7 @@ class Video {
     this.videoId,
     this.videoTitle,
     this.videoTypeName,
+    this.videoUserId,
     this.domainId,
     this.videoStatusId,
     this.videoTypeId,
@@ -62,10 +62,13 @@ class Video {
         videoStatusId: json["video_status_id"],
         videoTypeId: json["video_type_id"],
         userName: json["user_name"],
+        videoUserId: json["video_user_id"],
         domainName: json["domain_name"],
         videoStatusName: json["video_status_name"],
         createdAt: DateTime.parse(json["created_at"]),
-        updatedAt: json["updated_at"]==null?json["updated_at"]: DateTime.parse(json["updated_at"]),
+        updatedAt: json["updated_at"] == null
+            ? json["updated_at"]
+            : DateTime.parse(json["updated_at"]),
       );
 
   Map<String, dynamic> toJson() => {
@@ -76,6 +79,7 @@ class Video {
         "video_edit_by": videoEditBy,
         "video_voiceOver_by": videoVoiceOverBy,
         "video_id": videoId,
+        "video_user_id": videoUserId,
         "video_title": videoTitle,
         "video_type_name": videoTypeName,
         "domain_id": domainId,

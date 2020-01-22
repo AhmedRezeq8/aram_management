@@ -1,6 +1,5 @@
 
 import 'package:aram_management/src/model/domain.dart';
-import 'package:aram_management/src/model/video_status.dart';
 import 'package:http/http.dart' show Client;
 
 class DomainApi {

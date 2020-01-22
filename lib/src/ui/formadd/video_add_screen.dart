@@ -1,10 +1,8 @@
 import 'package:aram_management/src/api/domain_api.dart';
 import 'package:aram_management/src/api/video_api.dart';
-import 'package:aram_management/src/api/video_status_api.dart';
 import 'package:aram_management/src/api/video_type_api.dart';
 import 'package:aram_management/src/model/domain.dart';
 import 'package:aram_management/src/model/video.dart';
-import 'package:aram_management/src/model/video_status.dart';
 import 'package:aram_management/src/model/video_type.dart';
 import 'package:aram_management/src/provaiders/public_provaider.dart';
 import 'package:flutter/material.dart';
@@ -13,7 +11,7 @@ import 'package:provider/provider.dart';
 final GlobalKey<ScaffoldState> _scaffoldState = GlobalKey<ScaffoldState>();
 
 class VideoAddScreen extends StatefulWidget {
-  Video video;
+  final Video video;
 
   VideoAddScreen({this.video});
 
@@ -25,28 +23,24 @@ class _VideoAddScreenState extends State<VideoAddScreen> {
   bool isVideoStatusSelected = false;
   bool _isLoading = false;
   VideoApi _videoApi = VideoApi();
-  VideoStatusApi _videoStatusApi;
   VideoTypeApi _videoTypeApi;
   DomainApi _domainApi;
   bool _isFieldvideoTitleValid;
-  bool _isFieldEmailValid;
-  bool _isFieldAgeValid;
+  bool _isFieldVideoTypeValid;
+  bool _isFieldDomainValid;
   TextEditingController _controllervideoTitle = TextEditingController();
-  TextEditingController _controllerEmail = TextEditingController();
-  TextEditingController _controllerAge = TextEditingController();
-
+  SelectedVideoTypeProvider _controllerVideoType = SelectedVideoTypeProvider();
+  SelectedDomainProvider _controllerDomain = SelectedDomainProvider();
   @override
   void initState() {
     if (widget.video != null) {
       _isFieldvideoTitleValid = true;
       _controllervideoTitle.text = widget.video.videoTitle;
-
-      // _isFieldEmailValid = true;
-      // _controllerEmail.text = widget.video.email;
-      // _isFieldAgeValid = true;
-      // _controllerAge.text = widget.video.age.toString();
+      _controllerVideoType.index = int.parse(widget.video.videoTypeId);
+      _controllerDomain.index = int.parse(widget.video.domainId);
+      _isFieldVideoTypeValid = true;
+      _isFieldDomainValid = true;
     }
-    _videoStatusApi = VideoStatusApi();
     _videoTypeApi = VideoTypeApi();
     _domainApi = DomainApi();
     super.initState();
@@ -54,8 +48,13 @@ class _VideoAddScreenState extends State<VideoAddScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // final statusSelected =
-    //     Provider.of<SelectedStatusProvider>(context, listen: false);
+    var videoTypeSelected =
+        Provider.of<SelectedVideoTypeProvider>(context, listen: false);
+    videoTypeSelected.index = _controllerVideoType.index;
+
+    var domainSelected =
+        Provider.of<SelectedDomainProvider>(context, listen: false);
+    domainSelected.index = _controllerDomain.index;
 
     return Scaffold(
       key: _scaffoldState,
@@ -88,27 +87,45 @@ class _VideoAddScreenState extends State<VideoAddScreen> {
                       ),
                     ),
                     onPressed: () {
+                      print(_controllervideoTitle.text.toString());
+
                       if (_isFieldvideoTitleValid == null ||
-                          _isFieldEmailValid == null ||
-                          _isFieldAgeValid == null ||
-                          !_isFieldvideoTitleValid ||
-                          !_isFieldEmailValid ||
-                          !_isFieldAgeValid) {
+                              // _isFieldVideoTypeValid == null ||
+                              // _isFieldDomainValid == null ||
+                              !_isFieldvideoTitleValid
+                          // || !_isFieldVideoTypeValid ||
+                          // !_isFieldDomainValid
+                          ) {
                         _scaffoldState.currentState.showSnackBar(
                           SnackBar(
                             content: Text(" الرجاء تعبئة جميع الحقول"),
                           ),
                         );
-                        return; 
+                        return;
                       }
                       setState(() => _isLoading = true);
-                      String name = _controllervideoTitle.text.toString();
-                      // String email = _controllerEmail.text.toString();
-                      // int age = int.parse(_controllerAge.text.toString());
-                      Video video = Video(
-                        videoTitle: name, /* email: email, age: age*/
-                      );
+                      String title = _controllervideoTitle.text.toString();
+                      String vt = _controllerVideoType.index.toString();
+                      String vd = _controllerDomain.index.toString();
+                      String vs = '1';
+                      String vui = '1';
+                      String veb = '0';
+                      String ii = '0';
+                      String vpbb = '0';
+                      String vco = '0';
+                      DateTime vcreated = DateTime.now();
+                      DateTime vupdate = DateTime.now();
+
+                      Video video;
                       if (widget.video == null) {
+                        video = Video(
+                          videoTitle: title,
+                          videoTypeId: videoTypeSelected.index.toString(),
+                          domainId: domainSelected.index.toString(),
+                          videoStatusId: vs,
+                          videoUserId: vui,
+                          createdAt: vcreated,
+                        );
                         _videoApi.createVideo(video).then((isSuccess) {
                           setState(() => _isLoading = false);
                           if (isSuccess) {
@@ -233,20 +250,19 @@ class _VideoAddScreenState extends State<VideoAddScreen> {
         itemBuilder: (BuildContext context, int index) {
           VideoType _videoType = videoTypes[index];
           // print(_videoType.videoStatusName);
-          return Consumer<SelectedTypeProvider>(
-            builder: (ctx, statusSelected, _) => Container(
+          return Consumer<SelectedVideoTypeProvider>(
+            builder: (ctx, videoTypeSelected, _) => Container(
               margin: EdgeInsets.only(top: 10, left: 8),
               child: GestureDetector(
                 child: Chip(
                   label: Text(_videoType.videoTypeName),
-                  backgroundColor:
-                      statusSelected.index == int.parse(_videoType.videoTypeId)
-                          ? Colors.lime
-                          : Colors.grey[300],
+                  backgroundColor: videoTypeSelected.index ==
+                          int.parse(_videoType.videoTypeId)
+                      ? Colors.lime
+                      : Colors.grey[300],
                 ),
-                onTap: () {
-                  statusSelected.index = int.parse(_videoType.videoTypeId);
-                },
+                onTap: () =>
+                    videoTypeSelected.index = int.parse(_videoType.videoTypeId),
               ),
             ),
           );
@@ -274,23 +290,18 @@ class _VideoAddScreenState extends State<VideoAddScreen> {
                   child: Stack(children: <Widget>[
                     AnimatedOpacity(
                       duration: Duration(milliseconds: 200),
-                      opacity:domainSelected.index == int.parse(_domain.domainId)? 1:.2,
+                      opacity:
+                          domainSelected.index == int.parse(_domain.domainId)
+                              ? 1
+                              : .2,
                       child: CircleAvatar(
                         radius: 30,
                         backgroundImage: NetworkImage(_domain.domainImageUrl),
                       ),
                     ),
-                    // CircleAvatar(
-                    // //  radius: 50,
-                    //   backgroundColor: domainSelected.index == int.parse(_domain.domainId)
-                    //       ? Colors.grey.withOpacity(.00)
-                    //       : Colors.grey.withOpacity(.60),
-                    // ),
                   ]),
-                  onTap: () {
-                    print(domainSelected.index);
-                    domainSelected.index = int.parse(_domain.domainId);
-                  },
+                  onTap: () =>
+                      domainSelected.index = int.parse(_domain.domainId),
                 ),
                 SizedBox(
                   width: 10,

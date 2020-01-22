@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 final GlobalKey<ScaffoldState> _scaffoldState = GlobalKey<ScaffoldState>();
 
 class FormAddScreen extends StatefulWidget {
-  Profile profile;
+final  Profile profile;
 
   FormAddScreen({this.profile});
 

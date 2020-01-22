@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class SelectedTypeProvider with ChangeNotifier {
+class SelectedVideoTypeProvider with ChangeNotifier {
 
   int _selectedTypeId= 0;
   int get index => _selectedTypeId;
