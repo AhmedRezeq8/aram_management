@@ -41,6 +41,7 @@ class _VideoAddScreenState extends State<VideoAddScreen> {
       _isFieldVideoTypeValid = true;
       _isFieldDomainValid = true;
     }
+    
     _videoTypeApi = VideoTypeApi();
     _domainApi = DomainApi();
     super.initState();
@@ -48,13 +49,15 @@ class _VideoAddScreenState extends State<VideoAddScreen> {
 
   @override
   Widget build(BuildContext context) {
-    var videoTypeSelected =
-        Provider.of<SelectedVideoTypeProvider>(context, listen: false);
-    videoTypeSelected.index = _controllerVideoType.index;
 
-    var domainSelected =
-        Provider.of<SelectedDomainProvider>(context, listen: false);
-    domainSelected.index = _controllerDomain.index;
+   
+SelectedVideoTypeProvider videoTypeSelected = Provider.of<SelectedVideoTypeProvider>(context, listen: false);
+   videoTypeSelected.selectedTypeId = _controllerVideoType.index;
+    
+    
+
+    SelectedDomainProvider domainSelected = Provider.of<SelectedDomainProvider>(context, listen: false);
+domainSelected.selectedDomainId = _controllerDomain.index;
 
     return Scaffold(
       key: _scaffoldState,
@@ -105,8 +108,8 @@ class _VideoAddScreenState extends State<VideoAddScreen> {
                       }
                       setState(() => _isLoading = true);
                       String title = _controllervideoTitle.text.toString();
-                      String vt = _controllerVideoType.index.toString();
-                      String vd = _controllerDomain.index.toString();
+                      String vt = videoTypeSelected.selectedTypeId.toString();
+                      String vd = domainSelected.selectedDomainId.toString();
                       String vs = '1';
                       String vui = '1';
                       String veb = '0';
@@ -116,28 +119,35 @@ class _VideoAddScreenState extends State<VideoAddScreen> {
                       DateTime vcreated = DateTime.now();
                       DateTime vupdate = DateTime.now();
 
-                      Video video;
-                      if (widget.video == null) {
-                        video = Video(
+                      Video video= Video(
                           videoTitle: title,
-                          videoTypeId: videoTypeSelected.index.toString(),
-                          domainId: domainSelected.index.toString(),
+                          videoTypeId: vt,
+                          domainId: vd,
                           videoStatusId: vs,
                           videoUserId: vui,
                           createdAt: vcreated,
+                          updatedAt: vupdate,
                         );
-                        _videoApi.createVideo(video).then((isSuccess) {
-                          setState(() => _isLoading = false);
-                          if (isSuccess) {
-                            Navigator.pop(_scaffoldState.currentState.context);
-                          } else {
-                            _scaffoldState.currentState.showSnackBar(SnackBar(
-                              content: Text("فشل حفظ البيانات"),
-                            ));
-                          }
-                        });
+                      if (widget.video == null) {
+                        try {
+                          _videoApi.createVideo(video).then((isSuccess) {
+                            setState(() => _isLoading = false);
+                            if (isSuccess) {
+                              Navigator.pop(
+                                  _scaffoldState.currentState.context);
+                            } else {
+                              _scaffoldState.currentState.showSnackBar(SnackBar(
+                                content: Text("فشل حفظ البيانات"),
+                              ));
+                            }
+                          });
+                        } catch (e) {
+                          print(e.toString());
+                        }
                       } else {
+                         
                         video.videoId = widget.video.videoId;
+                        video.createdAt=widget.video.createdAt;
                         _videoApi.updateVideo(video).then((isSuccess) {
                           setState(() => _isLoading = false);
                           if (isSuccess) {
@@ -210,9 +220,7 @@ class _VideoAddScreenState extends State<VideoAddScreen> {
           List<VideoType> videoTypes = snapshot.data;
           return _buildListViewVideoType(videoTypes);
         } else {
-          return Center(
-            child: CircularProgressIndicator(),
-          );
+          return SizedBox(height: 60, child: Center(child: Text('جاري تحميل المعلومات')));
         }
       },
     );
@@ -231,9 +239,7 @@ class _VideoAddScreenState extends State<VideoAddScreen> {
           List<Domains> domains = snapshot.data;
           return _buildListViewDomains(domains);
         } else {
-          return Center(
-            child: CircularProgressIndicator(),
-          );
+          return SizedBox(height: 60, child: Center(child: Text('جاري تحميل المعلومات')));
         }
       },
     );

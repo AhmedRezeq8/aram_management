@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 
 class SelectedVideoTypeProvider with ChangeNotifier {
 
-  int _selectedTypeId= 0;
-  int get index => _selectedTypeId;
+  int selectedTypeId= 1;
+  int get index => selectedTypeId;
 
   set index(int val){
-    _selectedTypeId= val;
+    selectedTypeId= val;
     notifyListeners();
   }
 
@@ -22,11 +22,11 @@ class SelectedVideoTypeProvider with ChangeNotifier {
 
 class SelectedDomainProvider with ChangeNotifier {
 
-  int _selectedDomainId= 0;
-  int get index => _selectedDomainId;
+  int selectedDomainId= 1;
+  int get index => selectedDomainId;
 
   set index(int val){
-    _selectedDomainId= val;
+    selectedDomainId= val;
     notifyListeners();
   }
 

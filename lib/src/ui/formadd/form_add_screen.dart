@@ -85,6 +85,7 @@ class _FormAddScreenState extends State<FormAddScreen> {
                       String name = _controllerName.text.toString();
                       String email = _controllerEmail.text.toString();
                       int age = int.parse(_controllerAge.text.toString());
+                      
                       Profile profile =
                           Profile(name: name, email: email, age: age);
                       if (widget.profile == null) {

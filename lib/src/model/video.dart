@@ -72,23 +72,23 @@ class Video {
       );
 
   Map<String, dynamic> toJson() => {
-        "video_status_color": videoStatusColor,
-        "domain_image_url": domainImageUrl,
-        "video_produced_by": videoProducedBy,
-        "video_published_by": videoPublishedBy,
-        "video_edit_by": videoEditBy,
-        "video_voiceOver_by": videoVoiceOverBy,
         "video_id": videoId,
-        "video_user_id": videoUserId,
         "video_title": videoTitle,
-        "video_type_name": videoTypeName,
-        "domain_id": domainId,
-        "video_status_id": videoStatusId,
-        "video_type_id": videoTypeId,
-        "user_name": userName,
-        "domain_name": domainName,
-        "video_status_name": videoStatusName,
+        "video_type": videoTypeId,
+        "video_domain": domainId,
+        "video_status": videoStatusId,
+        "video_user_id": videoUserId,
+        "video_edit_by": videoEditBy,
         "created_at": createdAt.toIso8601String(),
         "updated_at": updatedAt.toIso8601String(),
+        "video_produced_by": videoProducedBy,
+        "video_published_by": videoPublishedBy,
+        "video_voiceOver_by": videoVoiceOverBy,
+        "video_status_color": videoStatusColor,
+        "domain_image_url": domainImageUrl,
+        "video_type_name": videoTypeName,
+        "user_name": userName,
+        "domain_name": domainName,
+        "video_status_name": videoStatusName
       };
 }
