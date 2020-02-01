@@ -59,130 +59,141 @@ SelectedVideoTypeProvider videoTypeSelected = Provider.of<SelectedVideoTypeProvi
     SelectedDomainProvider domainSelected = Provider.of<SelectedDomainProvider>(context, listen: false);
 domainSelected.selectedDomainId = _controllerDomain.index;
 
-    return Scaffold(
-      key: _scaffoldState,
-      appBar: AppBar(
-        iconTheme: IconThemeData(color: Colors.white),
-        title: Text(
-          widget.video == null ? "إضافة مادة" : "تعديل البيانات",
-          style: TextStyle(color: Colors.white),
-        ),
-      ),
-      body: Stack(
-        children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: <Widget>[
-                _buildTextFieldvideoTitle(),
-                _buildVideoType(),
-                _buildDomain(),
-                Padding(
-                  padding: const EdgeInsets.only(top: 8.0),
-                  child: RaisedButton(
-                    child: Text(
-                      widget.video == null
-                          ? "حفظ".toUpperCase()
-                          : "تعديل".toUpperCase(),
-                      style: TextStyle(
-                        color: Colors.white,
-                      ),
-                    ),
-                    onPressed: () {
-                      print(_controllervideoTitle.text.toString());
-
-                      if (_isFieldvideoTitleValid == null ||
-                              // _isFieldVideoTypeValid == null ||
-                              // _isFieldDomainValid == null ||
-                              !_isFieldvideoTitleValid
-                          // || !_isFieldVideoTypeValid ||
-                          // !_isFieldDomainValid
-                          ) {
-                        _scaffoldState.currentState.showSnackBar(
-                          SnackBar(
-                            content: Text(" الرجاء تعبئة جميع الحقول"),
-                          ),
-                        );
-                        return;
-                      }
-                      setState(() => _isLoading = true);
-                      String title = _controllervideoTitle.text.toString();
-                      String vt = videoTypeSelected.selectedTypeId.toString();
-                      String vd = domainSelected.selectedDomainId.toString();
-                      String vs = '1';
-                      String vui = '1';
-                      String veb = '0';
-                      String ii = '0';
-                      String vpbb = '0';
-                      String vco = '0';
-                      DateTime vcreated = DateTime.now();
-                      DateTime vupdate = DateTime.now();
-
-                      Video video= Video(
-                          videoTitle: title,
-                          videoTypeId: vt,
-                          domainId: vd,
-                          videoStatusId: vs,
-                          videoUserId: vui,
-                          createdAt: vcreated,
-                          updatedAt: vupdate,
-                        );
-                      if (widget.video == null) {
-                        try {
-                          _videoApi.createVideo(video).then((isSuccess) {
-                            setState(() => _isLoading = false);
-                            if (isSuccess) {
-                              Navigator.pop(
-                                  _scaffoldState.currentState.context);
-                            } else {
-                              _scaffoldState.currentState.showSnackBar(SnackBar(
-                                content: Text("فشل حفظ البيانات"),
-                              ));
-                            }
-                          });
-                        } catch (e) {
-                          print(e.toString());
-                        }
-                      } else {
-                         
-                        video.videoId = widget.video.videoId;
-                        video.createdAt=widget.video.createdAt;
-                        _videoApi.updateVideo(video).then((isSuccess) {
-                          setState(() => _isLoading = false);
-                          if (isSuccess) {
-                            Navigator.pop(_scaffoldState.currentState.context);
-                          } else {
-                            _scaffoldState.currentState.showSnackBar(SnackBar(
-                              content: Text("فشل تعديل البيانات"),
-                            ));
-                          }
-                        });
-                      }
-                    },
-                    color: Colors.orange[600],
-                  ),
-                )
-              ],
-            ),
+    return Hero(
+      tag: 'addVideo',
+          child: Scaffold(
+        key: _scaffoldState,
+        appBar: AppBar(
+          iconTheme: IconThemeData(color: Colors.white),
+          title: Text(
+            widget.video == null ? "إضافة مادة" : "تعديل البيانات",
+            style: TextStyle(color: Colors.white),
           ),
-          _isLoading
-              ? Stack(
+        ),
+        body: SingleChildScrollView(
+                  child: Stack(
+            children: <Widget>[
+              Padding(
+                
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Opacity(
-                      opacity: 0.3,
-                      child: ModalBarrier(
-                        dismissible: false,
-                        color: Colors.grey,
+                    _buildTextFieldvideoTitle(),
+                    _buildVideoType(),
+                    _buildDomain(),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 8.0),
+                      child: Container(
+                        width: double.infinity,
+                        
+                        child: RaisedButton(
+                          
+                          child: Text(
+                            widget.video == null
+                                ? "حفظ".toUpperCase()
+                                : "تعديل".toUpperCase(),
+                            style: TextStyle(
+                              color: Colors.white,
+                            ),
+                          ),
+                          onPressed: () {
+                            print(_controllervideoTitle.text.toString());
+
+                            if (_isFieldvideoTitleValid == null ||
+                                    // _isFieldVideoTypeValid == null ||
+                                    // _isFieldDomainValid == null ||
+                                    !_isFieldvideoTitleValid
+                                // || !_isFieldVideoTypeValid ||
+                                // !_isFieldDomainValid
+                                ) {
+                              _scaffoldState.currentState.showSnackBar(
+                                SnackBar(
+                                  content: Text(" الرجاء تعبئة جميع الحقول"),
+                                ),
+                              );
+                              return;
+                            }
+                            setState(() => _isLoading = true);
+                            String title = _controllervideoTitle.text.toString();
+                            String vt = videoTypeSelected.selectedTypeId.toString();
+                            String vd = domainSelected.selectedDomainId.toString();
+                            String vs = '1';
+                            String vui = '1';
+                            String veb = '0';
+                            String ii = '0';
+                            String vpbb = '0';
+                            String vco = '0';
+                            DateTime vcreated = DateTime.now();
+                            DateTime vupdate = DateTime.now();
+
+                            Video video= Video(
+                                videoTitle: title,
+                                videoTypeId: vt,
+                                domainId: vd,
+                                videoStatusId: vs,
+                                videoUserId: vui,
+                                createdAt: vcreated,
+                                updatedAt: vupdate,
+                              );
+                            if (widget.video == null) {
+                              try {
+                                _videoApi.createVideo(video).then((isSuccess) {
+                                  setState(() => _isLoading = false);
+                                  if (isSuccess) {
+                                    Navigator.pop(
+                                        _scaffoldState.currentState.context);
+                                  } else {
+                                    _scaffoldState.currentState.showSnackBar(SnackBar(
+                                      content: Text("فشل حفظ البيانات"),
+                                    ));
+                                  }
+                                });
+                              } catch (e) {
+                                print(e.toString());
+                              }
+                            } else {
+                               
+                              video.videoId = widget.video.videoId;
+                              video.createdAt=widget.video.createdAt;
+                              _videoApi.updateVideo(video).then((isSuccess) {
+                                setState(() => _isLoading = false);
+                                if (isSuccess) {
+                                  Navigator.pop(_scaffoldState.currentState.context);
+                                } else {
+                                  _scaffoldState.currentState.showSnackBar(SnackBar(
+                                    content: Text("فشل تعديل البيانات"),
+                                  ));
+                                }
+                              });
+                            }
+                          },
+                          color: Colors.orange[600],
+                        ),
                       ),
-                    ),
-                    Center(
-                      child: CircularProgressIndicator(),
-                    ),
+                    )
                   ],
-                )
-              : Container(),
-        ],
+                ),
+              ),
+              _isLoading
+                  ? Stack(
+                      children: <Widget>[
+                        Opacity(
+                          opacity: 0.3,
+                          child: ModalBarrier(
+                            dismissible: false,
+                            color: Colors.grey,
+                          ),
+                        ),
+                        Center(
+                          child: CircularProgressIndicator(),
+                        ),
+                      ],
+                    )
+                  : Container(),
+            ],
+          ),
+        ),
       ),
     );
   }

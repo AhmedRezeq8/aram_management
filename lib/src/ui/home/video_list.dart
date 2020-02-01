@@ -1,7 +1,10 @@
 import 'package:aram_management/src/api/video_api.dart';
 import 'package:aram_management/src/model/video.dart';
 import 'package:aram_management/src/ui/formadd/video_add_screen.dart';
+import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
+
+// GlobalKey<ScaffoldState> _scaffoldState = GlobalKey<ScaffoldState>();
 
 class VideoScreen extends StatefulWidget {
   @override
@@ -11,7 +14,6 @@ class VideoScreen extends StatefulWidget {
 class _VideoScreenState extends State<VideoScreen> {
   BuildContext context;
   VideoApi videoApi;
-
   @override
   void initState() {
     super.initState();
@@ -22,23 +24,37 @@ class _VideoScreenState extends State<VideoScreen> {
   Widget build(BuildContext context) {
     this.context = context;
     return SafeArea(
-      child: FutureBuilder(
-        future: videoApi.getVideos(),
-        builder: (BuildContext context, AsyncSnapshot<List<Video>> snapshot) {
-          if (snapshot.hasError) {
-            return Center(
-              child: Text(
-                  "Something wrong with message: ${snapshot.error.toString()}"),
-            );
-          } else if (snapshot.connectionState == ConnectionState.done) {
-            List<Video> videos = snapshot.data;
-            return _buildListView(videos);
-          } else {
-            return Center(
-              child: CircularProgressIndicator(),
-            );
-          }
-        },
+      child: Scaffold(
+        floatingActionButton: FloatingActionButton(
+          heroTag: "addVideo",
+          onPressed: () {
+            Route route =
+                MaterialPageRoute(builder: (context) => VideoAddScreen());
+
+            Navigator.push(context, route);
+          },
+          child: Icon(Icons.add),
+          backgroundColor: Colors.blue,
+        ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+        body: FutureBuilder(
+          future: videoApi.getVideos(),
+          builder: (BuildContext context, AsyncSnapshot<List<Video>> snapshot) {
+            if (snapshot.hasError) {
+              return Center(
+                child: Text(
+                    "Something wrong with message: ${snapshot.error.toString()}"),
+              );
+            } else if (snapshot.connectionState == ConnectionState.done) {
+              List<Video> videos = snapshot.data;
+              return _buildListView(videos);
+            } else {
+              return Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+          },
+        ),
       ),
     );
   }
@@ -54,9 +70,45 @@ class _VideoScreenState extends State<VideoScreen> {
           return Dismissible(
             direction: DismissDirection.startToEnd,
             onDismissed: (direction) {
-              Navigator.push(context, MaterialPageRoute(builder: (context) {
-                return VideoAddScreen(video: video);
-              }));
+              //استلام المادة من المقترح
+              String title = video.videoTitle.toString();
+              String vt = video.videoTypeId;
+              String vd = video.domainId;
+              String vs = '2';
+              String vui = '2';
+              String veb = '0';
+              String ii = '0';
+              String vpbb = '0';
+              String vco = '0';
+              DateTime vcreated = DateTime.now();
+              DateTime vupdate = DateTime.now();
+
+              Video _video = Video(
+                videoTitle: title,
+                videoTypeId: vt,
+                domainId: vd,
+                videoStatusId: vs,
+                videoUserId: vui,
+                createdAt: vcreated,
+                updatedAt: vupdate,
+              );
+              _video.videoId = video.videoId;
+              _video.createdAt = video.createdAt;
+              videoApi.updateVideo(_video).then((isSuccess) {
+                if (isSuccess) {
+                  BotToast.showSimpleNotification(
+                    title: "تم إستلام المادة",
+                    align: Alignment.bottomCenter,
+                    hideCloseButton: true,
+                  );
+                } else {
+                  BotToast.showSimpleNotification(
+                    title: "فشل إستلام المادة",
+                    align: Alignment.bottomCenter,
+                    hideCloseButton: true,
+                  );
+                }
+              });
             },
             key: ValueKey(video.videoId),
             background: Container(
