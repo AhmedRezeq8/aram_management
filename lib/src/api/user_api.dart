@@ -9,7 +9,9 @@ class UserApi {
   Future<List<User>> getUsers() async {
     final response = await client.get("$baseUrl/users/get");
     if (response.statusCode == 200) {
-      return userFromJson(response.body);
+    var body = userFromJson(response.body);
+      
+      return body ;
     } else {
       return null;
     }
@@ -50,6 +52,22 @@ class UserApi {
       return true;
     } else {
       return false;
+    }
+  }
+// check if user exsist
+// make a new api that check !!
+  Future<List<User>> getLoginUsers(String username, String password) async {
+    final response = await client.get("$baseUrl/users/get");
+    if (response.statusCode == 200) {
+    var body = userFromJson(response.body);
+
+    for (var item in body) {
+      print(item.userId);
+    }
+   
+      return body ;
+    } else {
+      return null;
     }
   }
 }

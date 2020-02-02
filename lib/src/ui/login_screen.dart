@@ -19,25 +19,25 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   void initState() {
     super.initState();
-
-    UserApi();
+//print('object');
+   // UserApi().getLoginUsers();
   }
 
-  Future<List<User>> login(String username, String password) async{
+  login(String username, String password) {
     //UserApi userApi = UserApi();
 
-    FutureBuilder(
-      future: UserApi().getUsers(),
-      builder: (BuildContext context, AsyncSnapshot<List<User>> snapshot) {
-        if (snapshot.hasData)
-          for (var item in snapshot.data) {
-            print(item.userName);
-          }
-        return Center(
-          child: CircularProgressIndicator(),
-        );
-      },
-    );
+    // FutureBuilder(
+    //   future: 
+    //   builder: (BuildContext context, AsyncSnapshot<List<User>> snapshot) {
+    //     if (snapshot.hasData)
+    //       for (var item in snapshot.data) {
+    //         print(item.userName);
+    //       }
+    //     return Center(
+    //       child: CircularProgressIndicator(),
+    //     );
+    //   },
+    // );
 
     //  Route route = MaterialPageRoute(
     //                               builder: (context) => TabHomeScreen());
@@ -121,8 +121,9 @@ class _LoginScreenState extends State<LoginScreen> {
                         color: Colors.transparent,
                         child: InkWell(
                           onTap: () {
-                            login(this._controllerUserName.text,
+                            UserApi().getLoginUsers(this._controllerUserName.text,
                                 this._controllerPassword.text);
+                            // login();
 
                             // FutureBuilder(
                             //   future: userApi.getUsers(),
