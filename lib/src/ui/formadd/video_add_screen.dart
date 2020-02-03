@@ -7,6 +7,7 @@ import 'package:aram_management/src/model/video_type.dart';
 import 'package:aram_management/src/provaiders/public_provaider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 final GlobalKey<ScaffoldState> _scaffoldState = GlobalKey<ScaffoldState>();
 
@@ -31,6 +32,14 @@ class _VideoAddScreenState extends State<VideoAddScreen> {
   TextEditingController _controllervideoTitle = TextEditingController();
   SelectedVideoTypeProvider _controllerVideoType = SelectedVideoTypeProvider();
   SelectedDomainProvider _controllerDomain = SelectedDomainProvider();
+
+  getLoginUserId() async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  int intValue = prefs.getInt('userid');
+  userID =intValue;
+  return intValue;
+}
+int userID =0;
   @override
   void initState() {
     if (widget.video != null) {
@@ -44,6 +53,7 @@ class _VideoAddScreenState extends State<VideoAddScreen> {
     
     _videoTypeApi = VideoTypeApi();
     _domainApi = DomainApi();
+     getLoginUserId();
     super.initState();
   }
 
@@ -119,11 +129,8 @@ domainSelected.selectedDomainId = _controllerDomain.index;
                             String vt = videoTypeSelected.selectedTypeId.toString();
                             String vd = domainSelected.selectedDomainId.toString();
                             String vs = '1';
-                            String vui = '1';
-                            String veb = '0';
-                            String ii = '0';
-                            String vpbb = '0';
-                            String vco = '0';
+                            String vui = userID.toString();
+                         
                             DateTime vcreated = DateTime.now();
                             DateTime vupdate = DateTime.now();
 
@@ -133,6 +140,10 @@ domainSelected.selectedDomainId = _controllerDomain.index;
                                 domainId: vd,
                                 videoStatusId: vs,
                                 videoUserId: vui,
+                                videoEditBy: '0',
+                                videoProducedBy: '0',
+                                videoPublishedBy: '0',
+                                videoVoiceOverBy: '0',
                                 createdAt: vcreated,
                                 updatedAt: vupdate,
                               );

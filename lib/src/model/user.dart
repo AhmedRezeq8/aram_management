@@ -5,6 +5,8 @@ List<User> userFromJson(String str) {
   final data = json.decode(str);
   return List<User>.from(data.map((item) => User.fromJson(item)));
 }
+User userrFromJson(String str) => User.fromJson(json.decode(str));
+
 String userToJson(User data) => json.encode(data.toJson());
 
 class User {

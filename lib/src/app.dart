@@ -1,4 +1,5 @@
 import 'package:aram_management/src/provaiders/public_provaider.dart';
+import 'package:aram_management/src/provaiders/user_provider.dart';
 import 'package:aram_management/src/ui/login_screen.dart';
 import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
@@ -15,6 +16,7 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (ctx) => SelectedVideoTypeProvider()),
         ChangeNotifierProvider(create: (ctx) => SelectedDomainProvider()),
+        ChangeNotifierProvider(create: (ctx) => UserProvider()),
       ],
       child: BotToastInit(
         child: MaterialApp(

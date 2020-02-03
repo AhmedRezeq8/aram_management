@@ -1,7 +1,7 @@
 import 'package:aram_management/src/api/user_api.dart';
-import 'package:aram_management/src/model/user.dart';
 import 'package:aram_management/src/ui/home/tab_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 // GlobalKey<ScaffoldState> _scaffoldState = GlobalKey<ScaffoldState>();
 
@@ -19,29 +19,6 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   void initState() {
     super.initState();
-//print('object');
-   // UserApi().getLoginUsers();
-  }
-
-  login(String username, String password) {
-    //UserApi userApi = UserApi();
-
-    // FutureBuilder(
-    //   future: 
-    //   builder: (BuildContext context, AsyncSnapshot<List<User>> snapshot) {
-    //     if (snapshot.hasData)
-    //       for (var item in snapshot.data) {
-    //         print(item.userName);
-    //       }
-    //     return Center(
-    //       child: CircularProgressIndicator(),
-    //     );
-    //   },
-    // );
-
-    //  Route route = MaterialPageRoute(
-    //                               builder: (context) => TabHomeScreen());
-    //                           Navigator.push(context, route);
   }
 
   @override
@@ -121,32 +98,23 @@ class _LoginScreenState extends State<LoginScreen> {
                         color: Colors.transparent,
                         child: InkWell(
                           onTap: () {
-                            UserApi().getLoginUsers(this._controllerUserName.text,
-                                this._controllerPassword.text);
-                            // login();
+                            UserApi()
+                                .getLoginUsers(this._controllerUserName.text,
+                                    this._controllerPassword.text)
+                                .then((isSuccess) {
+                              if (isSuccess) {
+                                getLoginUserId();
+                                Route route = MaterialPageRoute(
+                                    builder: (context) => TabHomeScreen());
 
-                            // FutureBuilder(
-                            //   future: userApi.getUsers(),
-                            //   builder: (BuildContext context,
-                            //       AsyncSnapshot<List<User>> snapshot) {
-                            //     if (snapshot.hasError) {
-                            //       return Center(
-                            //         child: Text(
-                            //             "Something wrong with message: ${snapshot.error.toString()}"),
-                            //       );
-                            //     } else if (snapshot.connectionState ==
-                            //         ConnectionState.done) {
-                            //       List<User> videos = snapshot.data;
-                            //       print('done !!');
-                            //       return null;
-                            //     } else {
-                            //       return Center(
-                            //         child: CircularProgressIndicator(),
-                            //       );
-                            //     }
-                            //   },
-                            // );
-                            // print('object');
+                                Navigator.push(context, route);
+                              } else {
+                                print('not loged in !!');
+                              }
+                            });
+                            ;
+
+                            //  print(userid.loginUser);
                           },
                           child: Center(
                             child: Text("تسجيل الدخول",
@@ -168,4 +136,12 @@ class _LoginScreenState extends State<LoginScreen> {
       ),
     );
   }
+}
+
+getLoginUserId() async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  //Return int
+  int intValue = prefs.getInt('userid');
+  // print(intValue);
+  return intValue;
 }

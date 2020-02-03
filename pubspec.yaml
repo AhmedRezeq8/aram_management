@@ -31,6 +31,7 @@ dependencies:
   shifting_tabbar: ^0.3.1
   font_awesome_flutter: ^8.5.0
   flutter_screenutil: ^0.4.2
+  shared_preferences: ^0.5.6+1
 
 dev_dependencies:
   flutter_test:

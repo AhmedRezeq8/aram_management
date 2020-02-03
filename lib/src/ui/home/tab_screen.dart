@@ -2,11 +2,34 @@ import 'package:aram_management/src/ui/home/video_list.dart';
 import 'package:aram_management/src/ui/login_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shifting_tabbar/shifting_tabbar.dart';
 
-class TabHomeScreen extends StatelessWidget {
+class TabHomeScreen extends StatefulWidget {
   const TabHomeScreen({Key key}) : super(key: key);
 
+  @override
+  _TabHomeScreenState createState() => _TabHomeScreenState();
+}
+
+class _TabHomeScreenState extends State<TabHomeScreen> {
+SharedPreferences sharedPrefs;
+getLoginUserId() async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  //Return int
+  int intValue = prefs.getInt('userid');
+  print(intValue);
+  return intValue;
+}
+@override
+void initState() {
+  super.initState();
+  getLoginUserId();
+  //  int intValue = sharedPrefs.getInt('userid');
+  // print(intValue);
+
+}
+  
   @override
   Widget build(BuildContext context) {
  return  DefaultTabController(

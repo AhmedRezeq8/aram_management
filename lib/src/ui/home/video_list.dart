@@ -3,6 +3,7 @@ import 'package:aram_management/src/model/video.dart';
 import 'package:aram_management/src/ui/formadd/video_add_screen.dart';
 import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 // GlobalKey<ScaffoldState> _scaffoldState = GlobalKey<ScaffoldState>();
 
@@ -14,10 +15,19 @@ class VideoScreen extends StatefulWidget {
 class _VideoScreenState extends State<VideoScreen> {
   BuildContext context;
   VideoApi videoApi;
+
+    getLoginUserId() async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  int intValue = prefs.getInt('userid');
+  userID =intValue;
+  return intValue;
+}
+int userID =0;
   @override
   void initState() {
     super.initState();
     videoApi = VideoApi();
+    getLoginUserId();
   }
 
   @override
@@ -70,13 +80,14 @@ class _VideoScreenState extends State<VideoScreen> {
           return Dismissible(
             direction: DismissDirection.startToEnd,
             onDismissed: (direction) {
+
               //استلام المادة من المقترح
               String title = video.videoTitle.toString();
               String vt = video.videoTypeId;
               String vd = video.domainId;
               String vs = '2';
-              String vui = '2';
-              String veb = '0';
+              String vui = video.videoUserId;
+              String veb = userID.toString();
               String ii = '0';
               String vpbb = '0';
               String vco = '0';
@@ -89,6 +100,7 @@ class _VideoScreenState extends State<VideoScreen> {
                 domainId: vd,
                 videoStatusId: vs,
                 videoUserId: vui,
+                videoEditBy: veb,
                 createdAt: vcreated,
                 updatedAt: vupdate,
               );
