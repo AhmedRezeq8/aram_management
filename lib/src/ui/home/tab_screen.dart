@@ -1,5 +1,6 @@
 import 'package:aram_management/src/ui/home/video_list.dart';
 import 'package:aram_management/src/ui/login_screen.dart';
+import 'package:aram_management/src/ui/transformer_page_view_demo.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -61,7 +62,8 @@ void initState() {
             body: TabBarView(
               children: [
                 VideoScreen(),
-                LoginScreen(),
+               TransformerPageViewDemoPage(),
+                // Icon(Icons.directions_car),
                 Icon(Icons.directions_car),
                 Icon(Icons.directions_transit),
                 Icon(Icons.directions_boat),

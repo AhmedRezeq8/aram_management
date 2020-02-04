@@ -1,4 +1,5 @@
 import 'package:aram_management/src/api/user_api.dart';
+import 'package:aram_management/src/ui/home/home_main.dart';
 import 'package:aram_management/src/ui/home/tab_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -16,9 +17,13 @@ class _LoginScreenState extends State<LoginScreen> {
   TextEditingController _controllerPassword = TextEditingController();
 
   UserApi userApi;
+
+
   @override
   void initState() {
     super.initState();
+    getLoginUserId();
+    
   }
 
   @override
@@ -105,7 +110,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               if (isSuccess) {
                                 getLoginUserId();
                                 Route route = MaterialPageRoute(
-                                    builder: (context) => TabHomeScreen());
+                                    builder: (context) => HomeMain());
 
                                 Navigator.push(context, route);
                               } else {
