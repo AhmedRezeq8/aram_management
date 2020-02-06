@@ -1,5 +1,6 @@
 import 'package:aram_management/src/provaiders/public_provaider.dart';
 import 'package:aram_management/src/provaiders/user_provider.dart';
+import 'package:aram_management/src/ui/home/home_main.dart';
 import 'package:aram_management/src/ui/home/tab_screen.dart';
 import 'package:aram_management/src/ui/login_screen.dart';
 import 'package:bot_toast/bot_toast.dart';
@@ -57,7 +58,7 @@ class _MyAppState extends State<MyApp> {
             const Locale('ar'), // English
           ],
           darkTheme: ThemeData.dark(),
-          home: userID>0? TabHomeScreen(): LoginScreen(),
+          home: userID>0? HomeMain(): LoginScreen(),
         
         ),
       ),

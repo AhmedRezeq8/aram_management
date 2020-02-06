@@ -34,12 +34,13 @@ class _VideoAddScreenState extends State<VideoAddScreen> {
   SelectedDomainProvider _controllerDomain = SelectedDomainProvider();
 
   getLoginUserId() async {
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  int intValue = prefs.getInt('userid');
-  userID =intValue;
-  return intValue;
-}
-int userID =0;
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    int intValue = prefs.getInt('userid');
+    userID = intValue;
+    return intValue;
+  }
+
+  int userID = 0;
   @override
   void initState() {
     if (widget.video != null) {
@@ -50,28 +51,26 @@ int userID =0;
       _isFieldVideoTypeValid = true;
       _isFieldDomainValid = true;
     }
-    
+
     _videoTypeApi = VideoTypeApi();
     _domainApi = DomainApi();
-     getLoginUserId();
+    getLoginUserId();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    SelectedVideoTypeProvider videoTypeSelected =
+        Provider.of<SelectedVideoTypeProvider>(context, listen: false);
+    videoTypeSelected.selectedTypeId = _controllerVideoType.index;
 
-   
-SelectedVideoTypeProvider videoTypeSelected = Provider.of<SelectedVideoTypeProvider>(context, listen: false);
-   videoTypeSelected.selectedTypeId = _controllerVideoType.index;
-    
-    
-
-    SelectedDomainProvider domainSelected = Provider.of<SelectedDomainProvider>(context, listen: false);
-domainSelected.selectedDomainId = _controllerDomain.index;
+    SelectedDomainProvider domainSelected =
+        Provider.of<SelectedDomainProvider>(context, listen: false);
+    domainSelected.selectedDomainId = _controllerDomain.index;
 
     return Hero(
       tag: 'addVideo',
-          child: Scaffold(
+      child: Scaffold(
         key: _scaffoldState,
         appBar: AppBar(
           iconTheme: IconThemeData(color: Colors.white),
@@ -81,10 +80,9 @@ domainSelected.selectedDomainId = _controllerDomain.index;
           ),
         ),
         body: SingleChildScrollView(
-                  child: Stack(
+          child: Stack(
             children: <Widget>[
               Padding(
-                
                 padding: const EdgeInsets.all(16.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -96,9 +94,7 @@ domainSelected.selectedDomainId = _controllerDomain.index;
                       padding: const EdgeInsets.only(top: 8.0),
                       child: Container(
                         width: double.infinity,
-                        
                         child: RaisedButton(
-                          
                           child: Text(
                             widget.video == null
                                 ? "حفظ".toUpperCase()
@@ -125,28 +121,31 @@ domainSelected.selectedDomainId = _controllerDomain.index;
                               return;
                             }
                             setState(() => _isLoading = true);
-                            String title = _controllervideoTitle.text.toString();
-                            String vt = videoTypeSelected.selectedTypeId.toString();
-                            String vd = domainSelected.selectedDomainId.toString();
+                            String title =
+                                _controllervideoTitle.text.toString();
+                            String vt =
+                                videoTypeSelected.selectedTypeId.toString();
+                            String vd =
+                                domainSelected.selectedDomainId.toString();
                             String vs = '1';
                             String vui = userID.toString();
-                         
+
                             DateTime vcreated = DateTime.now();
                             DateTime vupdate = DateTime.now();
 
-                            Video video= Video(
-                                videoTitle: title,
-                                videoTypeId: vt,
-                                domainId: vd,
-                                videoStatusId: vs,
-                                videoUserId: vui,
-                                videoEditBy: '0',
-                                videoProducedBy: '0',
-                                videoPublishedBy: '0',
-                                videoVoiceOverBy: '0',
-                                createdAt: vcreated,
-                                updatedAt: vupdate,
-                              );
+                            Video video = Video(
+                              videoTitle: title,
+                              videoTypeId: vt,
+                              domainId: vd,
+                              videoStatusId: vs,
+                              videoUserId: vui,
+                              videoEditBy: '0',
+                              videoProducedBy: '0',
+                              videoPublishedBy: '0',
+                              videoVoiceOverBy: '0',
+                              createdAt: vcreated,
+                              updatedAt: vupdate,
+                            );
                             if (widget.video == null) {
                               try {
                                 _videoApi.createVideo(video).then((isSuccess) {
@@ -155,7 +154,8 @@ domainSelected.selectedDomainId = _controllerDomain.index;
                                     Navigator.pop(
                                         _scaffoldState.currentState.context);
                                   } else {
-                                    _scaffoldState.currentState.showSnackBar(SnackBar(
+                                    _scaffoldState.currentState
+                                        .showSnackBar(SnackBar(
                                       content: Text("فشل حفظ البيانات"),
                                     ));
                                   }
@@ -164,15 +164,16 @@ domainSelected.selectedDomainId = _controllerDomain.index;
                                 print(e.toString());
                               }
                             } else {
-                               
                               video.videoId = widget.video.videoId;
-                              video.createdAt=widget.video.createdAt;
+                              video.createdAt = widget.video.createdAt;
                               _videoApi.updateVideo(video).then((isSuccess) {
                                 setState(() => _isLoading = false);
                                 if (isSuccess) {
-                                  Navigator.pop(_scaffoldState.currentState.context);
+                                  Navigator.pop(
+                                      _scaffoldState.currentState.context);
                                 } else {
-                                  _scaffoldState.currentState.showSnackBar(SnackBar(
+                                  _scaffoldState.currentState
+                                      .showSnackBar(SnackBar(
                                     content: Text("فشل تعديل البيانات"),
                                   ));
                                 }
@@ -242,7 +243,8 @@ domainSelected.selectedDomainId = _controllerDomain.index;
           List<VideoType> videoTypes = snapshot.data;
           return _buildListViewVideoType(videoTypes);
         } else {
-          return SizedBox(height: 60, child: Center(child: Text('جاري تحميل المعلومات')));
+          return SizedBox(
+              height: 60, child: Center(child: Text('جاري تحميل المعلومات')));
         }
       },
     );
@@ -261,7 +263,8 @@ domainSelected.selectedDomainId = _controllerDomain.index;
           List<Domains> domains = snapshot.data;
           return _buildListViewDomains(domains);
         } else {
-          return SizedBox(height: 60, child: Center(child: Text('جاري تحميل المعلومات')));
+          return SizedBox(
+              height: 60, child: Center(child: Text('جاري تحميل المعلومات')));
         }
       },
     );
