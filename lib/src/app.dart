@@ -3,6 +3,8 @@ import 'package:aram_management/src/provaiders/user_provider.dart';
 import 'package:aram_management/src/ui/home/home_main.dart';
 import 'package:aram_management/src/ui/home/tab_screen.dart';
 import 'package:aram_management/src/ui/login_screen.dart';
+import 'package:aram_management/src/ui/profileScreen/profile_screen.dart';
+import 'package:aram_management/src/ui/signScreens/sign_screen.dart';
 import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -19,20 +21,28 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
 
+  int _userID = 0;
   
-  getLoginUserId() async {
+  Future<int> getLoginUserId() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     int intValue = prefs.getInt('userid');
-    userID = intValue;
+   
     return intValue;
   }
+  
+  void _updateUserId(int userId) {
+    setState(() {
+      this._userID = userId;
+    });
+  }
 
-  int userID = 0;
+  
 
   @override
   void initState() {
-     getLoginUserId();
-     print(userID);
+     getLoginUserId().then(_updateUserId);
+    
+     print(_userID);
     super.initState();
     
   }
@@ -43,9 +53,12 @@ class _MyAppState extends State<MyApp> {
         ChangeNotifierProvider(create: (ctx) => SelectedVideoTypeProvider()),
         ChangeNotifierProvider(create: (ctx) => SelectedDomainProvider()),
         ChangeNotifierProvider(create: (ctx) => UserProvider()),
+        ChangeNotifierProvider(create: (ctx) => SelectedSginProvider()),
       ],
       child: BotToastInit(
-        child: MaterialApp(
+        child: MaterialApp( 
+          theme: ThemeData(fontFamily: 'ArabicModern'),
+          // theme: ThemeData.dark(),
           navigatorObservers: [BotToastNavigatorObserver()],
           debugShowCheckedModeBanner: false,
           localizationsDelegates: [
@@ -58,7 +71,7 @@ class _MyAppState extends State<MyApp> {
             const Locale('ar'), // English
           ],
           darkTheme: ThemeData.dark(),
-          home: userID>0? HomeMain(): LoginScreen(),
+          home: _userID>0? ProfileScreen(): SignInUPScreen(),
         
         ),
       ),

@@ -30,14 +30,21 @@ class SelectedDomainProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  int _count = 0;
-  int get count => _count;
-
-  set count(int val){
-    _count= val;
-    notifyListeners();
-  }
+  
 
 }
 
+class SelectedSginProvider with ChangeNotifier {
+
+  int selectedSign= 1;
+  int get index => selectedSign;
+
+  set index(int val){
+    selectedSign= val;
+    notifyListeners();
+  }
+
+  
+
+}
 

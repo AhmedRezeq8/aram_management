@@ -34,9 +34,9 @@ class _HomeMainState extends State<HomeMain> {
             padding: const EdgeInsets.all(2),
             child: CircleAvatar(
               backgroundImage: NetworkImage(
-                'https://scontent.fbtz1-4.fna.fbcdn.net/v/t1.0-9/39467861_1974066275972645_1391056009283239936_n.jpg?_nc_cat=102&_nc_ohc=rtuEl8w7iAkAX9lDBXI&_nc_ht=scontent.fbtz1-4.fna&oh=8c8f7b71562e1e3c36dd33e49e48b228&oe=5EC625AC',
-              ),
-              radius: 26,
+                  'https://scontent.fbtz1-4.fna.fbcdn.net/v/t1.0-9/39467861_1974066275972645_1391056009283239936_n.jpg?_nc_cat=102&_nc_ohc=rtuEl8w7iAkAX9lDBXI&_nc_ht=scontent.fbtz1-4.fna&oh=8c8f7b71562e1e3c36dd33e49e48b228&oe=5EC625AC',
+                  scale: 1),
+              radius: 20,
             ),
           ),
           onTap: () {},
@@ -93,7 +93,7 @@ class _HomeMainState extends State<HomeMain> {
   Widget _buildListViewUsers(List<User> user) {
     return Container(
         height: 200,
-        color: Colors.white30,
+        // color: Colors.white30,
         child: GridView.builder(
             shrinkWrap: false,
             primary: false,
@@ -180,7 +180,6 @@ class _HomeMainState extends State<HomeMain> {
                     height: 5,
                   ),
                   CircleAvatar(
-                  
                       radius: 30,
                       backgroundImage: NetworkImage(_domain.domainImageUrl)),
                   Row(
@@ -190,8 +189,7 @@ class _HomeMainState extends State<HomeMain> {
                       SizedBox(
                         width: 10,
                       ),
-                      Text('15',
-                          style: TextStyle(color: Colors.white)),
+                      Text('15', style: TextStyle(color: Colors.white)),
                     ],
                   ),
                   Row(
@@ -201,19 +199,16 @@ class _HomeMainState extends State<HomeMain> {
                       SizedBox(
                         width: 10,
                       ),
-                      Text('15',
-                          style: TextStyle(color: Colors.white)),
+                      Text('15', style: TextStyle(color: Colors.white)),
                     ],
                   ),
                   Row(
                     children: <Widget>[
-                      Text('للنشر',
-                          style: TextStyle(color: Colors.white)),
+                      Text('للنشر', style: TextStyle(color: Colors.white)),
                       SizedBox(
                         width: 10,
                       ),
-                      Text('15',
-                          style: TextStyle(color: Colors.white)),
+                      Text('15', style: TextStyle(color: Colors.white)),
                     ],
                   ),
                 ],
