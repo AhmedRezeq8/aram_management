@@ -37,6 +37,7 @@ dependencies:
   tabbar: ^0.0.3
   simple_animations:
   page_transition: 
+  division:
 
 
 dev_dependencies:

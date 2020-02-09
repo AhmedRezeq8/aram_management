@@ -1,6 +1,6 @@
 import 'package:aram_management/src/api/domain_api.dart';
 import 'package:aram_management/src/api/user_api.dart';
-import 'package:aram_management/src/api/video_api.dart';
+// import 'package:aram_management/src/api/video_api.dart';
 import 'package:aram_management/src/model/domain.dart';
 import 'package:aram_management/src/model/user.dart';
 import 'package:badges/badges.dart';
@@ -14,12 +14,12 @@ class HomeMain extends StatefulWidget {
 class _HomeMainState extends State<HomeMain> {
   UserApi _userApi;
   DomainApi _domainApi;
-  VideoApi _videoApi;
+  // VideoApi _videoApi;
 
   @override
   void initState() {
     _userApi = UserApi();
-    _videoApi = VideoApi();
+    // _videoApi = VideoApi();
     _domainApi = DomainApi();
     super.initState();
   }

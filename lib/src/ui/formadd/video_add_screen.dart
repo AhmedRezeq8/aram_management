@@ -27,8 +27,8 @@ class _VideoAddScreenState extends State<VideoAddScreen> {
   VideoTypeApi _videoTypeApi;
   DomainApi _domainApi;
   bool _isFieldvideoTitleValid;
-  bool _isFieldVideoTypeValid;
-  bool _isFieldDomainValid;
+  // bool _isFieldVideoTypeValid;
+  // bool _isFieldDomainValid;
   TextEditingController _controllervideoTitle = TextEditingController();
   SelectedVideoTypeProvider _controllerVideoType = SelectedVideoTypeProvider();
   SelectedDomainProvider _controllerDomain = SelectedDomainProvider();
@@ -48,8 +48,8 @@ class _VideoAddScreenState extends State<VideoAddScreen> {
       _controllervideoTitle.text = widget.video.videoTitle;
       _controllerVideoType.index = int.parse(widget.video.videoTypeId);
       _controllerDomain.index = int.parse(widget.video.domainId);
-      _isFieldVideoTypeValid = true;
-      _isFieldDomainValid = true;
+      // _isFieldVideoTypeValid = true;
+      // _isFieldDomainValid = true;
     }
 
     _videoTypeApi = VideoTypeApi();

@@ -1,5 +1,6 @@
 import 'package:aram_management/src/api/user_api.dart';
 import 'package:aram_management/src/ui/home/home_main.dart';
+import 'package:aram_management/src/ui/profileScreen/profile_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -117,7 +118,7 @@ class _SignInState extends State<SignIn> {
                           if (isSuccess) {
                             getLoginUserId();
                             Route route = MaterialPageRoute(
-                                builder: (context) => HomeMain());
+                                builder: (context) => ProfileScreen());
 
                             Navigator.push(context, route);
                           } else {

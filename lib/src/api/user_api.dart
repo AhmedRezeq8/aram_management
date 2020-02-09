@@ -1,5 +1,4 @@
 import 'package:aram_management/src/model/user.dart';
-import 'package:aram_management/src/provaiders/user_provider.dart';
 import 'package:http/http.dart' show Client;
 import 'package:shared_preferences/shared_preferences.dart';
 
