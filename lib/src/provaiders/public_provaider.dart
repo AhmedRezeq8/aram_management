@@ -44,7 +44,19 @@ class SelectedSginProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  
 
 }
 
+// home main select video status listener
+class SelectedVideoStatusProvider with ChangeNotifier {
+
+  int selectedStatus= 1;
+  int get index => selectedStatus;
+
+  set index(int val){
+    selectedStatus= val;
+    notifyListeners();
+  }
+
+
+}

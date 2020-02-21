@@ -38,6 +38,7 @@ dependencies:
   simple_animations:
   page_transition: 
   division:
+  intl: 
 
 
 dev_dependencies:

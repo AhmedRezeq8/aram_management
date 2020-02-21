@@ -1,5 +1,6 @@
 import 'package:aram_management/src/provaiders/public_provaider.dart';
 import 'package:aram_management/src/provaiders/user_provider.dart';
+import 'package:aram_management/src/ui/home/home_main.dart';
 import 'package:aram_management/src/ui/profileScreen/profile_screen.dart';
 import 'package:aram_management/src/ui/signScreens/sign_screen.dart';
 import 'package:bot_toast/bot_toast.dart';
@@ -16,7 +17,7 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
 
-//////////////////     check if userID exst              //////////////////////////////////////
+//////////////////               check if userID exst              //////////////////////////////////////
   int _userID = 0;
   Future<int> getLoginUserId() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -29,7 +30,7 @@ class _MyAppState extends State<MyApp> {
       this._userID = userId;
     });
   }
-/////////////////////////////     end                /////////////////////////////////////////////////
+/////////////////////////////           end             /////////////////////////////////////////////////
 ///
 ///
  
@@ -46,6 +47,7 @@ class _MyAppState extends State<MyApp> {
         ChangeNotifierProvider(create: (ctx) => SelectedVideoTypeProvider()),
         ChangeNotifierProvider(create: (ctx) => SelectedDomainProvider()),
         ChangeNotifierProvider(create: (ctx) => UserProvider()),
+        ChangeNotifierProvider(create: (ctx) => SelectedVideoStatusProvider()),
         ChangeNotifierProvider(create: (ctx) => SelectedSginProvider()),
       ],
       child: BotToastInit(
@@ -64,7 +66,7 @@ class _MyAppState extends State<MyApp> {
             const Locale('ar'), // English
           ],
           darkTheme: ThemeData.dark(),
-          home: _userID > 0 ? ProfileScreen() : SignInUPScreen(),
+          home: _userID > 0 ? HomeMain() : SignInUPScreen(),
         ),
       ),
     );

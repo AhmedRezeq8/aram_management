@@ -16,13 +16,14 @@ class _VideoScreenState extends State<VideoScreen> {
   BuildContext context;
   VideoApi videoApi;
 
-    getLoginUserId() async {
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  int intValue = prefs.getInt('userid');
-  userID =intValue;
-  return intValue;
-}
-int userID =0;
+  getLoginUserId() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    int intValue = prefs.getInt('userid');
+    userID = intValue;
+    return intValue;
+  }
+
+  int userID = 0;
   @override
   void initState() {
     super.initState();
@@ -80,7 +81,6 @@ int userID =0;
           return Dismissible(
             direction: DismissDirection.startToEnd,
             onDismissed: (direction) {
-
               //استلام المادة من المقترح
               String title = video.videoTitle.toString();
               String vt = video.videoTypeId;
