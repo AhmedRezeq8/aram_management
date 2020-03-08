@@ -18,7 +18,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
-GlobalKey _keyRed = GlobalKey();
+// GlobalKey _keyRed = GlobalKey();
 
 class HomeMain extends StatefulWidget {
   @override
@@ -312,7 +312,7 @@ class _HomeMainState extends State<HomeMain> {
 
   Widget _buildListViewVideo(List<Video> video) {
     return Container(
-      key: _keyRed,
+      // key: _keyRed,
       height: 600,
       width: MediaQuery.of(context).size.width * .8,
 
